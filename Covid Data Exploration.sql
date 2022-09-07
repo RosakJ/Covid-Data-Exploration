@@ -97,13 +97,13 @@ Join PortfolioProject..CovidVaccinations vac
 	On dea.location = vac.location
 	and dea.date = vac.date
 where dea.continent is not null
-order by 2, 3
+order by 2, 3;
 
 
 -- Using CTE to perform a calculation on the population vs the vaccination for each country
 -- Used Partition by to get the correct number per country
 
-With PopvsVac (Continent, Location, Date, Population, new_vaccinations, RollingPeopleVaccinated)
+with PopvsVac (Continent, Location, Date, Population, new_vaccinations, RollingPeopleVaccinated)
 as (
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(convert(bigint, vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
@@ -144,6 +144,7 @@ From #PercentPopulationVaccinated
 
 
 -- Creating View to store data for later visualizations
+GO
 
 Create View PercentPopulationVaccinated as
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
